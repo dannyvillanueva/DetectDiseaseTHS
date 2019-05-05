@@ -1,0 +1,8 @@
+# Similarity Methods
+
+## Jaccard Similarity
+    1. Lemmatization:
+    
+    In terminal install spaCy Lemmatization
+    # pip install spacy
+    # spacy download en
