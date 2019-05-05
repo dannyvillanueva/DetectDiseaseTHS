@@ -1,0 +1,1 @@
+[![Board Status](https://dvillanueva.visualstudio.com/6bfe4e9d-e3d3-48d8-aeb2-f19867e06ab2/847624fd-6070-45bb-ba35-bb6834a3ddb1/_apis/work/boardbadge/443f202e-d93d-49c4-8aa5-e0a63b5e84ae)](https://dvillanueva.visualstudio.com/6bfe4e9d-e3d3-48d8-aeb2-f19867e06ab2/_boards/board/t/847624fd-6070-45bb-ba35-bb6834a3ddb1/Microsoft.RequirementCategory)
