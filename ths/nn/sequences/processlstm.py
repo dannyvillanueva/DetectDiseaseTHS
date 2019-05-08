@@ -117,13 +117,13 @@ class ProcessTweetsWord2VecOnePassLSTMv2_1:
         zeros_count = len(Y_train) - ones_count
         print("ones count: ", ones_count)
         print("zeros count: ", zeros_count)
-        #Y_train = to_categorical(Y_train, num_classes=3)
+        Y_train = to_categorical(Y_train, num_classes=3)
         print("Train data convert to numpy arrays")
         #NN = TweetSentiment2DCNN(trim_size, G)
         #NN = TweetSentiment2LSTM2Dense(trim_size, G)
-        #NN =TweetSentiment2LSTM2Dense3Layer(trim_size, G)
+        NN =TweetSentiment2LSTM2Dense3Layer(trim_size, G)
         #NN =TweetSentiment2LSTM2Dense4Layer(trim_size, G)
-        NN = TweetSentiment2LSTM2Attentionv2(trim_size, G)
+        #NN = TweetSentiment2LSTM2Attentionv2(trim_size, G)
         #print("Build GRU")
         #NN = TweetSentimentGRUSM(max_len, G)
 
@@ -138,12 +138,12 @@ class ProcessTweetsWord2VecOnePassLSTMv2_1:
         rmsprop = RMSprop(decay=0.003)
         adam = Adam(lr=0.1, decay=0.05)
         sgd = SGD(lr=0.05)
-        NN.compile(optimizer='adam', loss="binary_crossentropy", metrics=['accuracy', precision, recall, f1, fprate])
+        NN.compile(optimizer='adam', loss="categorical_crossentropy", metrics=['accuracy', precision, recall, f1, fprate])
         print("model compiled")
         print("Begin training")
         callback = TensorBoard(log_dir="/tmp/logs")
-        #class_weight = {0: 0.67, 1: 0.33}
-        class_weight = None
+        class_weight = {0: 0.67, 1: 0.33}
+        #class_weight = None
         history = NN.fit(X_train, Y_train, epochs=epochs, batch_size=32, callbacks=[callback], validation_split=0.20, class_weight=class_weight)
         print("Model trained")
         # X_test_indices, max_len = S.map_sentence_list(X_test_sentences)

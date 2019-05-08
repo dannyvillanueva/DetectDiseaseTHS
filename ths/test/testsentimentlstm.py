@@ -11,7 +11,7 @@ def main():
     # El mejor fue modellstmatt2 con attention
     # also good modellstmatt3
     # el 4 con dropout
-    P.process("trained/modellstmatt7.json", "trained/modellstmatt7.h5", plot=True, epochs=15)
+    P.process("trained/modellstmatt8.json", "trained/modellstmatt8.h5", plot=True, epochs=15)
 #joderme
 if __name__ == "__main__":
     main()
