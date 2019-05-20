@@ -142,7 +142,7 @@ class Word2VecEmbedding:
 
     def read_embedding(self):
         try:
-            data_in = open(self.filename, "r")
+            data_in = open(self.filename, "r", encoding='utf-8')
         except Exception as e:
             msg  = sys.exc_info()[0]
             raise EmbeddingException(msg) from e
