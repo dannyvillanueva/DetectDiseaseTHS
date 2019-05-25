@@ -61,7 +61,7 @@ class GloveEmbedding:
             msg  = sys.exc_info()[0]
             raise EmbeddingException(msg) from e
         else:
-            i = 0
+            i = 1
             word_to_idx = {}
             idx_to_word = {}
             word_to_vect = []
