@@ -294,10 +294,10 @@ def target_distribution(q):
 if __name__ == "__main__":
 
     # load data
-    glove_dims = 200 # options: 50, 200
+    glove_dims = 50 # options: 50, 200
     labeled_data = 0  # options: 0, 1
     compute_baseline_kmeans = 0 # 0, 1
-    stored_embedding = 1  # options: 0, 1
+    stored_embedding = 0  # options: 0, 1
     load_autoencoder = 0
     load_final_model = 0
     SE = get_glove(glove_dims)

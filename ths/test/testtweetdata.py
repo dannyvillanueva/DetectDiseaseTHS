@@ -6,6 +6,9 @@ from autocorrect import spell
 import random
 import csv
 import numpy as np
+import spacy
+from nltk.corpus import stopwords
+from nltk.tokenize import word_tokenize
 import sys
 #import os
 #os.chdir(os.getcwd())
@@ -63,6 +66,22 @@ def has_disease(t):
             return True
     return False
 
+
+def lemmatizer_spacy(d):
+    spacy.prefer_gpu()
+    nlp = spacy.load('en_core_web_sm')
+    row = " ".join([token.lemma_ for token in nlp(d)])
+    #row = row.replace("-PRON-", '')  # remove -PRON-
+    return row
+
+
+
+def remove_stopwords(i):
+    stop_words = set(stopwords.words('english'))
+    word_tokens = word_tokenize(i)
+    filtered_sentence = [w for w in word_tokens if w not in stop_words]
+    newline = " ".join(filtered_sentence)
+    return newline
 
 def main1():
     with open("data/raw_tweet100k.json") as json_data:
@@ -412,6 +431,46 @@ def main5():
         print(e)
 
 
+def main6():
+    try:
+        datafile = open("data/final_similarity_data.csv", "r")
+        new_file = []
+        cc = 1
+        with datafile as f:
+            for row in csv.reader(f):
+                print("row: ", cc)
+                r0 = " ".join(row[0].split())
+                r0 = remove_stopwords(r0)
+                r0 = lemmatizer_spacy(r0)
+                r0 = remove_stopwords(r0)
+                r1 = int(row[1])
+                r2 = int(row[2])
+
+                r3 = " ".join(row[3].split())
+                r3 = remove_stopwords(r3)
+                r3 = lemmatizer_spacy(r3)
+                r3 = remove_stopwords(r3)
+                r4 = int(row[4])
+                r5 = int(row[5])
+
+                r6 = " ".join(row[6].split())
+                r6 = remove_stopwords(r6)
+                r6 = lemmatizer_spacy(r6)
+                r6 = remove_stopwords(r6)
+                r7 = int(row[7])
+                r8 = int(row[8])
+
+                r9 = float(row[9])
+                r10 = float(row[10])
+                r11 = int(row[11])
+
+                new_row = [r0, r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11]
+                new_file.append(new_row)
+                cc += 1
+        np.save("data/final_similarity_data_lm", new_file)
+    except FileNotFoundError as e:
+        print(e)
+
 def save_file(st, sl, l):
     outfile = open(l+st+'.csv', 'w', newline='')
     writer = csv.writer(outfile)
@@ -441,6 +500,6 @@ def load_data(f):
 
 
 if __name__ == "__main__":
-    main5()
+    main6()
     #data = load_data('data/data_to_labeling_test4.npy')
     #save_multi_file_csv('data/new_labeling_data_student_', data)

@@ -148,12 +148,22 @@ def get_sets_triplets(d):
     return flu, ebola, measles, diarrhea
 
 
-def get_sets_datalabels(dis):
+def get_sets_datalabels(dis, label=0):
     labeled_data = load_np_data('data/cleantextlabels7.npy')
     list_d = []
     for row in labeled_data:
         disease = get_disease(row[0])
-        if disease == dis:
+        if disease == dis and int(row[1]) == 0:
+            list_d.append(row)
+    return list_d
+
+
+def get_sets_datalabels_dif(dis):
+    labeled_data = load_np_data('data/cleantextlabels7.npy')
+    list_d = []
+    for row in labeled_data:
+        disease = get_disease(row[0])
+        if disease and disease != dis and int(row[1]) == 0:
             list_d.append(row)
     return list_d
 
@@ -161,40 +171,26 @@ def get_sets_datalabels(dis):
 def set_input_same_class(d):
     flu, ebola, measles, diarrhea = get_sets_triplets(d)
     data = []
-    triplet_set = set()
+
     list_disease = ['flu', 'ebola', 'measles', 'diarrhea']
     for dis in list_disease:
-        print(dis)
-        for i in range(2000):
-            disease = False
-            while not disease:
-                if dis == 'flu':
-                    triplet_all = random.choice(flu)
-                if dis == 'ebola':
-                    triplet_all = random.choice(ebola)
-                if dis == 'measles':
-                    triplet_all = random.choice(measles)
-                if dis == 'diarrhea':
-                    triplet_all = random.choice(diarrhea)
-                triplet_first = triplet_all[0]
-                dis2 = get_disease(triplet_first)
-                if dis2 == dis:
-                    disease = True
-            cont = 0
-            while cont == 0:
-                h3 = random.choice(get_sets_datalabels(dis))
-                if get_disease(h3[0]) == dis and int(h3[1]) == 0:
-                    cont = 1
-            if dis == dis2 and triplet_first not in triplet_set:
-                list_dis = {'flu': 0, 'measles': 1, 'diarrhea': 2, 'ebola': 3, 'zika': 4}
-                data.append([triplet_all[0],triplet_all[1], triplet_all[2], triplet_all[3], triplet_all[4],
-                              triplet_all[5], h3[0], list_dis[dis], int(h3[1]), triplet_all[9], 0.05])
-            triplet_set.add(triplet_first)
-            print("disease", dis, "len data: ", len(data), " steps ", i)
-            if len(data) >= 800:
-                i = 2000
-            else:
-                i += 1
+        for i in range(900):
+            if dis == 'flu':
+                triplet_all = random.choice(flu)
+            if dis == 'ebola':
+                triplet_all = random.choice(ebola)
+            if dis == 'measles':
+                triplet_all = random.choice(measles)
+            if dis == 'diarrhea':
+                triplet_all = random.choice(diarrhea)
+
+            sets_datalabels = get_sets_datalabels(dis, 1)
+            h3 = random.choice(sets_datalabels)
+            list_dis = {'flu': 0, 'measles': 1, 'diarrhea': 2, 'ebola': 3, 'zika': 4}
+            data.append([triplet_all[0],triplet_all[1], triplet_all[2], triplet_all[3], triplet_all[4],
+                    triplet_all[5], h3[0], list_dis[dis], int(h3[1]), triplet_all[9], 0.05])
+            i += 1
+        print("disease", dis, "len data: ", len(data))
     data = set_global_relevance(data)
     new_data = d + data
     return new_data
@@ -206,45 +202,35 @@ def set_input_outof_class(d):
     triplet_set = set()
     list_disease = ['flu', 'ebola', 'measles', 'diarrhea']
     for dis in list_disease:
-        print(dis)
-        for i in range(2000):
-            disease = False
-            while not disease:
-                if dis == 'flu':
-                    triplet_all = random.choice(flu)
-                if dis == 'ebola':
-                    triplet_all = random.choice(ebola)
-                if dis == 'measles':
-                    triplet_all = random.choice(measles)
-                if dis == 'diarrhea':
-                    triplet_all = random.choice(diarrhea)
-                triplet_first = triplet_all[0]
-                dis2 = get_disease(triplet_first)
-                if dis2 == dis:
-                    disease = True
-            cont = 0
-            list_dis = {'flu': 0, 'measles': 1, 'diarrhea': 2, 'ebola': 3, 'zika': 4}
-            while cont == 0:
-                list_dis_2 = ['flu', 'measles', 'ebola', 'diarrhea']
-                random.shuffle(list_dis_2)
-                for row_lis in list_dis_2:
-                    if row_lis != dis:
-                        h3_dis = row_lis
-                h3 = random.choice(get_sets_datalabels(h3_dis))
-                if get_disease(h3[0]) != dis and int(h3[1]) == 0:
-                    cont = 1
-            if dis == dis2 and triplet_first not in triplet_set:
-                data.append([triplet_all[0],triplet_all[1], triplet_all[2], triplet_all[3], triplet_all[4],
-                              triplet_all[5], h3[0], list_dis[h3_dis], int(h3[1]), triplet_all[9], 0.0])
-            triplet_set.add(triplet_first)
-            print("disease", dis, "len data: ", len(data), " steps ", i)
-            if len(data) >= 800:
-                i = 2000
-            else:
-                i += 1
+        for i in range(900):
+            if dis == 'flu':
+                triplet_all = random.choice(flu)
+            if dis == 'ebola':
+                triplet_all = random.choice(ebola)
+            if dis == 'measles':
+                triplet_all = random.choice(measles)
+            if dis == 'diarrhea':
+                triplet_all = random.choice(diarrhea)
+            list_dis = {'flu': 0, 'measles': 1, 'diarrhea': 2, 'ebola': 3}
+            sets_datalabels = get_sets_datalabels_dif(dis)
+            h3 = random.choice(sets_datalabels)
+            h3_dis = get_disease(h3[0])
+            data.append([triplet_all[0],triplet_all[1], triplet_all[2], triplet_all[3], triplet_all[4],
+                              triplet_all[5], h3[0], list_dis[h3_dis], int(h3[1]), triplet_all[9], 0.15])
+            i += 1
+        print("-out of class- disease", dis, "len data: ", len(data))
     data = set_global_relevance(data)
     new_data = d + data
     return new_data
+
+
+def save_csv_final(final):
+    np.save('data/final_similarity_data', final)
+    outfile = open('data/final_similarity_data.csv', 'w', newline='')
+    writer = csv.writer(outfile)
+    writer.writerows(final)
+    outfile.close()
+    print("file final saved")
 
 
 if __name__ == "__main__":
@@ -262,3 +248,4 @@ if __name__ == "__main__":
     print("finish add triplets same class", len(final_data))
     final_data = set_input_outof_class(final_data)
     print("finish add triplets out of class", len(final_data))
+    save_csv_final(final_data)
