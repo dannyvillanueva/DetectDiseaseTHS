@@ -433,7 +433,7 @@ def main5():
 
 def main6():
     try:
-        datafile = open("data/final_similarity_data.csv", "r")
+        datafile = open("data/final_similarity_data_new.csv", "r")
         new_file = []
         cc = 1
         with datafile as f:
@@ -467,7 +467,14 @@ def main6():
                 new_row = [r0, r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11]
                 new_file.append(new_row)
                 cc += 1
-        np.save("data/final_similarity_data_lm", new_file)
+        np.save("data/final_similarity_data_new_lm", new_file)
+        np_new_file = np.array(new_file)
+        outfile = open('data/final_similarity_data_new_lm.csv', 'w', newline='')
+        writer = csv.writer(outfile)
+        writer.writerows(np_new_file)
+        outfile.close()
+        print("file final saved")
+
     except FileNotFoundError as e:
         print(e)
 

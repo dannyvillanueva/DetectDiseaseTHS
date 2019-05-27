@@ -187,8 +187,17 @@ def set_input_same_class(d):
             sets_datalabels = get_sets_datalabels(dis, 1)
             h3 = random.choice(sets_datalabels)
             list_dis = {'flu': 0, 'measles': 1, 'diarrhea': 2, 'ebola': 3, 'zika': 4}
-            data.append([triplet_all[0],triplet_all[1], triplet_all[2], triplet_all[3], triplet_all[4],
-                    triplet_all[5], h3[0], list_dis[dis], int(h3[1]), triplet_all[9], 0.05])
+            rand_number = np.random.choice([0, 1])
+            if rand_number == 1:
+                data.append([triplet_all[0], triplet_all[1], triplet_all[2],
+                             triplet_all[3], triplet_all[4],triplet_all[5],
+                             h3[0], list_dis[dis], int(h3[1]), triplet_all[9], 0.05])
+
+            else:
+                data.append([triplet_all[0], triplet_all[1], triplet_all[2],
+                             h3[0], list_dis[dis], int(h3[1]),
+                             triplet_all[6], triplet_all[7], triplet_all[8],
+                             0.05, triplet_all[10]])
             i += 1
         print("disease", dis, "len data: ", len(data))
     data = set_global_relevance(data)
@@ -196,7 +205,7 @@ def set_input_same_class(d):
     return new_data
 
 
-def set_input_outof_class(d):
+def set_input_outof_class(d, total):
     flu, ebola, measles, diarrhea = get_sets_triplets(d)
     data = []
     triplet_set = set()
@@ -215,18 +224,29 @@ def set_input_outof_class(d):
             sets_datalabels = get_sets_datalabels_dif(dis)
             h3 = random.choice(sets_datalabels)
             h3_dis = get_disease(h3[0])
-            data.append([triplet_all[0],triplet_all[1], triplet_all[2], triplet_all[3], triplet_all[4],
-                              triplet_all[5], h3[0], list_dis[h3_dis], int(h3[1]), triplet_all[9], 0.15])
+            rand_number = np.random.choice([0, 1])
+            if rand_number == 1:
+                data.append([triplet_all[0], triplet_all[1], triplet_all[2],
+                             triplet_all[3], triplet_all[4], triplet_all[5],
+                             h3[0], list_dis[h3_dis], int(h3[1]),
+                             triplet_all[9], 0.15])
+
+            else:
+                data.append([triplet_all[0], triplet_all[1], triplet_all[2],
+                             h3[0], list_dis[h3_dis], int(h3[1]),
+                             triplet_all[6], triplet_all[7], triplet_all[8],
+                             0.15, triplet_all[10]])
+
             i += 1
         print("-out of class- disease", dis, "len data: ", len(data))
     data = set_global_relevance(data)
-    new_data = d + data
+    new_data = total + data
     return new_data
 
 
 def save_csv_final(final):
-    np.save('data/final_similarity_data', final)
-    outfile = open('data/final_similarity_data.csv', 'w', newline='')
+    np.save('data/final_similarity_data_new', final)
+    outfile = open('data/final_similarity_data_new.csv', 'w', newline='')
     writer = csv.writer(outfile)
     writer.writerows(final)
     outfile.close()
@@ -242,10 +262,13 @@ if __name__ == "__main__":
     print("finish set disease", len(final_data))
     final_data = set_labels(final_data)
     print("finish set labels", len(final_data))
-    final_data = set_global_relevance(final_data)
+    final = set_global_relevance(final_data)
     print("finish set global relevance", len(final_data))
-    final_data = set_input_same_class(final_data)
+
+    final_data = set_input_same_class(final)
     print("finish add triplets same class", len(final_data))
-    final_data = set_input_outof_class(final_data)
+
+    final_data = set_input_outof_class(final, final_data)
     print("finish add triplets out of class", len(final_data))
+
     save_csv_final(final_data)
