@@ -56,7 +56,7 @@ class GloveEmbedding:
 
     def read_embedding(self):
         try:
-            data_in = open(self.filename, "r",)
+            data_in = open(self.filename, "r", encoding="utf-8")
         except Exception as e:
             msg  = sys.exc_info()[0]
             raise EmbeddingException(msg) from e
@@ -93,14 +93,14 @@ class GloveEmbedding:
                         word_to_idx[word_part] = i
                         word_to_vect.append(np.asarray(vec))
                         i = i + 1
-            np_word_to_vect = np.array(word_to_vect)
-            #add <unk> token
-            #unk = np.random.rand(self.dimensions,)
-            #unk = np.ones((self.dimensions,))
-            #idx_to_word[i] = "<unk>"
-            #word_to_idx["<unk>"] = i
-            #word_to_vect.append(unk)
             #np_word_to_vect = np.array(word_to_vect)
+            #add <unk> token
+            unk = np.random.rand(self.dimensions,)
+            unk = np.ones((self.dimensions,))
+            idx_to_word[i] = "<unk>"
+            word_to_idx["<unk>"] = i
+            word_to_vect.append(unk)
+            np_word_to_vect = np.array(word_to_vect)
             return word_to_idx, idx_to_word, np_word_to_vect
 
 
